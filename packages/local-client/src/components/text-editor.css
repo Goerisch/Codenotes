@@ -1,0 +1,22 @@
+.text-editor .w-md-editor-bar svg {
+    display: none;
+}
+
+.text-editor .w-md-editor-bar {
+    height: 11px;
+    width: 100%;
+    cursor: row-resize;
+    background-color: #37414b;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+}
+
+.text-editor .wmde-markdown ul {
+    list-style: disc;
+}
+
+.text-editor .card-content {
+    background-color: #0d1117;
+}
