@@ -18,7 +18,7 @@ export const createCellsRouter = (filename: string, dir: string) => {
 
     const fullPath = path.join(dir, filename);
 
-    router.get('/cells', async (req, res, next) => {
+    router.get('/cells', async (req, res) => {
         const isLocalApiError = (err: any): err is LocalApiError => {
             return typeof err.code === 'string';
         };
@@ -27,14 +27,12 @@ export const createCellsRouter = (filename: string, dir: string) => {
             const result = await fs.readFile(fullPath, {encoding: 'utf8'});
 
             res.send(JSON.parse(result));
-            next();
         } catch (err) {
             if (isLocalApiError(err)) {
                 if (err.code === 'ENOENT') {
                     // Create new file with default cells
                     await fs.writeFile(fullPath, '[]', 'utf8');
                     res.send([]);
-                    next();
                 } else {
                     throw err;
                 }
@@ -46,7 +44,7 @@ export const createCellsRouter = (filename: string, dir: string) => {
         // Send a list of cells back to the browser
     });
 
-    router.post('/cells', async (req, res, next) => {
+    router.post('/cells', async (req, res) => {
         // Take the list of cells from the request obj
         // serialize them
         const {cells}: {cells: Cell[]} = req.body;
@@ -54,6 +52,6 @@ export const createCellsRouter = (filename: string, dir: string) => {
         await fs.writeFile(fullPath, JSON.stringify(cells), 'utf8');
 
         res.send({status: 'ok'});
-        next();
     });
+    return router;
 };

@@ -20,7 +20,7 @@ const createCellsRouter = (filename, dir) => {
     const router = express_1.default.Router();
     router.use(express_1.default.json());
     const fullPath = path_1.default.join(dir, filename);
-    router.get('/cells', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get('/cells', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const isLocalApiError = (err) => {
             return typeof err.code === 'string';
         };
@@ -28,7 +28,6 @@ const createCellsRouter = (filename, dir) => {
             // Read the file
             const result = yield promises_1.default.readFile(fullPath, { encoding: 'utf8' });
             res.send(JSON.parse(result));
-            next();
         }
         catch (err) {
             if (isLocalApiError(err)) {
@@ -36,7 +35,6 @@ const createCellsRouter = (filename, dir) => {
                     // Create new file with default cells
                     yield promises_1.default.writeFile(fullPath, '[]', 'utf8');
                     res.send([]);
-                    next();
                 }
                 else {
                     throw err;
@@ -47,14 +45,14 @@ const createCellsRouter = (filename, dir) => {
         // Parse a list of cells from file
         // Send a list of cells back to the browser
     }));
-    router.post('/cells', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    router.post('/cells', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // Take the list of cells from the request obj
         // serialize them
         const { cells } = req.body;
         // Write the cells into the file
         yield promises_1.default.writeFile(fullPath, JSON.stringify(cells), 'utf8');
         res.send({ status: 'ok' });
-        next();
     }));
+    return router;
 };
 exports.createCellsRouter = createCellsRouter;
