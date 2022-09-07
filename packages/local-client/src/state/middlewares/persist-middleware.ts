@@ -4,7 +4,15 @@ import {ActionType} from '../action-types';
 import {saveCells} from '../action-creators';
 import {RootState} from '../reducers/index';
 
-export const persistMiddleware = ({dispatch}: {dispatch: Dispatch<Action>}) => {
+export const persistMiddleware = ({
+    dispatch,
+    getState,
+}: {
+    dispatch: Dispatch<Action>;
+    getState: () => RootState;
+}) => {
+    let timer: any;
+
     return (next: (action: Action) => void) => {
         return (action: Action) => {
             next(action);
@@ -17,7 +25,12 @@ export const persistMiddleware = ({dispatch}: {dispatch: Dispatch<Action>}) => {
                     ActionType.DELETE_CELL,
                 ].includes(action.type)
             ) {
-                console.log('I WANT TO SAVE CELLS');
+                if (timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(() => {
+                    saveCells()(dispatch, getState);
+                }, 250);
             }
         };
     };
